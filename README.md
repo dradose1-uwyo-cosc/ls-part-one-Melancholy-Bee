@@ -6,10 +6,11 @@
 * Sort package documentation: https://pkg.go.dev/sort#Slice
 * Os package documentation: https://pkg.go.dev/os#Args
 ## Project Quirks/ Things that don't work
-* Nothing caught
+* Project can't completely replicate the true ls sorting rules. Currently, strings are compared as lowercase with '.' and '-' removed to get close. 
 ## Executing
 * Clone the project
 * Go to the ls-part-one-Melancholy-Bee directory
 * Call go build -o gols ./main
 * Run the project with ./gols
+
 

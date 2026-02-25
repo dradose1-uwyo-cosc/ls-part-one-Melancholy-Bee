@@ -8,7 +8,7 @@ import (
 )
 
 // Sort the arguments by files and directories
-func Sort_many_files(files []string) ([]string, []string, error) {
+func Sort_entries(files []string) ([]string, []string, error) {
 	var f []string
 	var dir []string
 	var errs []error
@@ -25,8 +25,8 @@ func Sort_many_files(files []string) ([]string, []string, error) {
 			f = append(f, file)
 		}
 	}
-	sort.Strings(f)
-	sort.Strings(dir)
+	f = sort_directory(f)
+	dir = sort_directory(dir)
 
 	return f, dir, errors.Join(errs...)
 }
@@ -36,7 +36,9 @@ func sort_directory(files []string) []string {
 	// Apply non-case sensitive sorting while ignoring periods like ls
 	sort.Slice(files, func(i, j int) bool {
 		a := strings.ReplaceAll(strings.ToLower(files[i]), ".", "")
+		a = strings.ReplaceAll(a, "-", "")
 		b := strings.ReplaceAll(strings.ToLower(files[j]), ".", "")
+		b = strings.ReplaceAll(b, "-", "")
 		return a < b
 	})
 	return files

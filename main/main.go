@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"gols/functions"
 	"os"
@@ -19,13 +20,15 @@ func main() {
 	}
 
 	// Sort files and directories separately and lexically
-	files, directories, err = functions.Sort_many_files(files)
+	files, directories, err = functions.Sort_entries(files)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 	}
 
 	// Call ls command for printing
-	err = functions.Gols(files, directories)
+	writer := bufio.NewWriter(os.Stdout)
+	err = functions.Gols(files, directories, writer)
+	defer writer.Flush()
 
 	// Exist abnormally if any errors occur
 	if err != nil {

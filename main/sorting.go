@@ -8,7 +8,7 @@ import (
 )
 
 // Sort the arguments by files and directories
-func sort_many_files(files []string) ([]string, int, error) {
+func sort_many_files(files []string) ([]string, []string, error) {
 	var f []string
 	var dir []string
 	var errs []error
@@ -28,7 +28,7 @@ func sort_many_files(files []string) ([]string, int, error) {
 	sort.Strings(f)
 	sort.Strings(dir)
 
-	return append(f, dir...), len(f), errors.Join(errs...)
+	return f, dir, errors.Join(errs...)
 }
 
 // Sort the files in the specified directory

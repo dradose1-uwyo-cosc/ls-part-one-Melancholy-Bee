@@ -15,9 +15,7 @@ const (
 
 func main() {
 	var files []string
-	var reg_num int
-	var many_files bool
-	var last_file bool = false
+	var directories []string
 	var err error
 
 	if len(os.Args) == 1 {
@@ -25,23 +23,14 @@ func main() {
 	} else {
 		files = os.Args[1:]
 	}
-	if len(files) == 1 {
-		many_files = false
-	} else {
-		many_files = true
-		files, reg_num, err = sort_many_files(files)
-		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
-		}
+	files, directories, err = sort_many_files(files)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
 	}
 
-	for i, f := range files {
-		if i == len(files)-1 {
-			last_file = true
-		}
-		err = gols(f, i >= reg_num, many_files, last_file)
-		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
-		}
+	err = gols(files, directories)
+
+	if err != nil {
+		os.Exit(1)
 	}
 }

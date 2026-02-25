@@ -1,4 +1,4 @@
-package main
+package functions
 
 import (
 	"errors"
@@ -8,7 +8,7 @@ import (
 )
 
 // Sort the arguments by files and directories
-func sort_many_files(files []string) ([]string, []string, error) {
+func Sort_many_files(files []string) ([]string, []string, error) {
 	var f []string
 	var dir []string
 	var errs []error

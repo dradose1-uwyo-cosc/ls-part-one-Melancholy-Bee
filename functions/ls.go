@@ -1,4 +1,4 @@
-package main
+package functions
 
 import (
 	"fmt"
@@ -6,12 +6,21 @@ import (
 	"path/filepath"
 )
 
-func gols(files []string, directories []string) error {
+type color string
+
+const (
+	Reset color = "\033[0m"
+	Green color = "\033[01;32m"
+	Blue  color = "\033[01;34m"
+)
+
+func Gols(files []string, directories []string) error {
 	var err error
+	colors := isTerminal(os.Stdout)
 
 	// Print regular files
 	for _, f := range files {
-		err = print_regular_file(f)
+		err = print_regular_file(f, colors)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 		}
@@ -24,7 +33,7 @@ func gols(files []string, directories []string) error {
 
 	// Print directory contents
 	for i, f := range directories {
-		err = print_directory(f, len(directories)+len(files) > 1)
+		err = print_directory(f, len(directories)+len(files) > 1, colors)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 		}
@@ -35,12 +44,12 @@ func gols(files []string, directories []string) error {
 	return err
 }
 
-func print_regular_file(file_name string) error {
+func print_regular_file(file_name string, colors bool) error {
 	info, err := os.Lstat(file_name)
 	if err != nil {
 		return err
 	}
-	if info.Mode().IsRegular() && (info.Mode()&0111) != 0 {
+	if colors && info.Mode().IsRegular() && (info.Mode()&0111) != 0 {
 		fmt.Print(Green)
 	}
 	fmt.Println(file_name, Reset)
@@ -48,7 +57,7 @@ func print_regular_file(file_name string) error {
 	return nil
 }
 
-func print_directory(file_name string, many bool) error {
+func print_directory(file_name string, many bool, colors bool) error {
 	var err error
 	var list []string
 
@@ -79,9 +88,9 @@ func print_directory(file_name string, many bool) error {
 		if err != nil {
 			return err
 		}
-		if info.IsDir() {
+		if colors && info.IsDir() {
 			fmt.Print(Blue)
-		} else if info.Mode().IsRegular() && (info.Mode()&0111) != 0 {
+		} else if colors && info.Mode().IsRegular() && (info.Mode()&0111) != 0 {
 			fmt.Print(Green)
 		}
 		fmt.Println(f, Reset)

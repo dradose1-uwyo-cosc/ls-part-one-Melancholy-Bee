@@ -2,15 +2,8 @@ package main
 
 import (
 	"fmt"
+	"gols/functions"
 	"os"
-)
-
-type color string
-
-const (
-	Reset color = "\033[0m"
-	Green color = "\033[01;32m"
-	Blue  color = "\033[01;34m"
 )
 
 func main() {
@@ -26,13 +19,13 @@ func main() {
 	}
 
 	// Sort files and directories separately and lexically
-	files, directories, err = sort_many_files(files)
+	files, directories, err = functions.Sort_many_files(files)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 	}
 
 	// Call ls command for printing
-	err = gols(files, directories)
+	err = functions.Gols(files, directories)
 
 	// Exist abnormally if any errors occur
 	if err != nil {

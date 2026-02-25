@@ -9,6 +9,7 @@ import (
 func gols(files []string, directories []string) error {
 	var err error
 
+	// Print regular files
 	for _, f := range files {
 		err = print_regular_file(f)
 		if err != nil {
@@ -16,12 +17,14 @@ func gols(files []string, directories []string) error {
 		}
 	}
 
+	// Add blank line after section if multiple argument types
 	if len(files) > 0 && len(directories) > 0 {
 		fmt.Println()
 	}
 
+	// Print directory contents
 	for i, f := range directories {
-		err = print_directory(f, len(directories) > 1)
+		err = print_directory(f, len(directories)+len(files) > 1)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 		}
@@ -49,6 +52,7 @@ func print_directory(file_name string, many bool) error {
 	var err error
 	var list []string
 
+	// Add header if multiple arguments
 	if many {
 		fmt.Println(file_name + ":")
 	}
@@ -56,15 +60,18 @@ func print_directory(file_name string, many bool) error {
 		file_name, err = os.Getwd()
 	}
 
+	// Read in directory contents
 	entries, err := os.ReadDir(file_name)
 	if err != nil {
 		return err
 	}
 	for _, f := range entries {
+		// Avoid hidden files
 		if f.Name()[0] != '.' {
 			list = append(list, f.Name())
 		}
 	}
+	// Sort directory contents lexically
 	list = sort_directory(list)
 	for _, f := range list {
 		file_path := filepath.Join(file_name, f)
